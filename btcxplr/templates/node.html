@@ -21,7 +21,13 @@
                 <th scope="row">{{ peer['id'] }}</th>
                 <td><a href="https://bitnodes.io/nodes/{{ peer['addr'].replace(':', '-') }}/">{{ peer['addr'] }}</a></td>
                 <td>{{ peer['subver'] }}</td>
-                <td>{{ "%d ms"|format(peer['pingtime'] * 1000) }}</td>
+                <td>
+                    {% if peer['pingtime'] %}
+                        {{ "%d ms"|format(peer['pingtime'] * 1000) }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
                 <td>{{ "%.2f MB"|format(peer['bytessent'] / 2**20) }}</td>
                 <td>{{ "%.2f MB"|format(peer['bytesrecv'] / 2**20) }}</td>
             </tr>
