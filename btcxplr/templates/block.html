@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block main %}
+<h3>Block {{ data['height'] }}</h3>
+<table class="table">
+    <tbody>
+        <tr>
+            <th>Hash</td>
+            <td>{{ data['hash'] }}</td>
+        </tr>
+        <tr>
+            <th>Confirmations</td>
+            <td>{{ data['confirmations'] }}</td>
+        </tr>
+        <tr>
+            <th>Timestamp</td>
+            <td>{{ data['time'] | ctime }}</td>
+        </tr>
+        <tr>
+            <th>Height</td>
+            <td>{{ data['height'] }}</td>
+        </tr>
+        <tr>
+            <th>Miner</td>
+            <td>{{ data['miner'] }}</td>
+        </tr>
+        <tr>
+            <th>Number of Transactions</td>
+            <td>{{ data['tx']|length }}</td>
+        </tr>
+        <tr>
+            <th>Difficulty</td>
+            <td>{{ data['difficulty'] }}</td>
+        </tr>
+        <tr>
+            <th>Merkle root</td>
+            <td>{{ data['merkleroot'] }}</td>
+        </tr>
+        <tr>
+            <th>Version</td>
+            <td>0x{{ data['versionHex'] }}</td>
+        </tr>
+        <tr>
+            <th>Bits</td>
+            <td>{{ data['bits']|int(base=16) }}</td>
+        </tr>
+        <tr>
+            <th>Weight</td>
+            <td>{{ data['weight'] }}</td>
+        </tr>
+        <tr>
+            <th>Size</td>
+            <td>{{ data['size'] }} bytes</td>
+        </tr>
+        <tr>
+            <th>Nonce</td>
+            <td>{{ data['nonce'] }}</td>
+        </tr>
+        <tr>
+            <th>Transaction Volume</td>
+            <td>{{ stats['total_out'] / 10**8 }} BTC</td>
+        </tr>
+        <tr>
+            <th>Block Reward</td>
+            <td>{{ stats['subsidy'] / 10**8 }} BTC</td>
+        </tr>
+        <tr>
+            <th>Fee Reward</td>
+            <td>{{ stats['totalfee'] / 10**8 }} BTC</td>
+        </tr>
+    </tbody>
+</table>
+
+<h4>Block Transactions</h4>
+<table class="table">
+    <tbody>
+    {% for tx in data['tx'] %}
+        <tr>
+            <th class="table-primary">Index</th>
+            <td class="table-primary">{{ loop.index - 1}}</td>
+        </tr>
+        <tr>
+            <th>Hash</th>
+            <td><a href="/txn/{{ tx }}">{{ tx }}</a></td>
+        </tr>
+        <tr>
+            <th></th>
+            <td></td>
+        </tr>
+    {% endfor %}    
+    </tbody>
+</table>
+
+{% endblock %}

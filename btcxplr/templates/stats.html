@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block main %}
+<div class="container">
+    <h3>Bitcoin Blockchain Stats</h3>
+    <table>
+        <tr>
+            <td>Block Height</td>
+            <td><a href="/blk/{{ data['blocks'] }}">{{ data['blocks'] }}</a></td>
+        </tr>
+        <tr>
+            <td>Network Difficulty</td>
+            <td>{{ data['difficulty'] }}</td>
+        </tr>
+        <tr>
+            <td>Network Hash Rate</td>
+            <td>{{ "%d EH/s"|format(data['networkhashps'] / 10**18) }}</td>
+        </tr>
+        <tr>
+            <td>Memory Pool Transactions</td>
+            <td><a href='/pool'>{{ data['pooledtx'] }}</a></td>
+        </tr>
+    </table>
+</div>
+{% endblock %}

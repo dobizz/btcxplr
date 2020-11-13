@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block main %}
+<h3>Summary</h3>
+<table class="table">
+    <tbody>
+        <tr>
+            <th>Hash</th>
+            <td>{{ data['hash'] }}
+            </td>
+        </tr>
+        <tr>
+            <th>Fee</th>
+            <td>BTC</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>Details</h3>
+<table class="table">
+    <tbody>
+        <tr>
+            <th>Hash</td>
+            <td>{{ data['hash'] }}</td>
+        </tr>
+        <tr>
+            <th>Received Time</td>
+            <td>{{ data['time'] | ctime }}</td>
+        </tr>
+        <tr>
+            <th>Size</td>
+            <td>{{ data['size'] }} bytes</td>
+        </tr>
+        <tr>
+            <th>Weight</td>
+            <td>{{ data['weight'] }}</td>
+        </tr>
+        <tr>
+            <th>Included in Block</td>
+            <td><a href="/blk/{{ data['height'] }}">{{ data['height'] }}</a></td>
+        </tr>
+        <tr>
+            <th>Confirmations</td>
+            <td>{{ data['confirmations'] }}</td>
+        </tr>
+        <tr>
+            <th>Total Input</td>
+            <td>### sum input</td>
+        </tr>
+        <tr>
+            <th>Total Output</td>
+            <td>### sum output</td>
+        </tr>
+        <tr>
+            <th>Fees</td>
+            <td>### sum fees</td>
+        </tr>
+        <tr>
+            <th>Fees per byte</td>
+            <td>### sum fees / bytes</td>
+        </tr>
+        <tr>
+            <th>Fees per weight unit</td>
+            <td>### sum fees / weight</td>
+        </tr>
+        {% if data['price'] %}
+        <tr>
+            <th>Value when transacted</td>
+            <td>{{ data['price'] }}</td>
+        </tr>
+        {% endif %}
+    </tbody>
+</table>
+
+
+<h3>Inputs</h3>
+<table class="table">
+    <tbody>
+    {% if 'coinbase' in data['vin'][0] %}
+        <tr>
+            <th class="table-success">Index</th>
+            <td class="table-success">0</td>
+        </tr>
+        <tr>
+            <th>Coinbase</th>
+            <td>{{data['vin'][0]['coinbase'] }}</td>
+        </tr>
+    {% else %}
+        {% for input in data['vin'] %}
+            <tr>
+                <th class="table-success">Index</th>
+                <td class="table-success">{{ loop.index - 1}}</td>
+            </tr>
+            <tr>
+                <th>Transaction Id</th>
+                <td><a href="/txn/{{ input['txid'] }}">{{ input['txid'] }}</a></td>
+            </tr>
+            {% if input['scriptPubKey'] %}
+            <tr>
+                <th>Address</th>
+                <td>{{ input['scriptPubKey']['addresses'][0] }}</td>
+            </tr>
+            {% endif %}
+            <tr>
+                <th>Value</th>
+                <td>{{ input['value'] }}</td>
+            </tr>
+            {% if input['scriptSig'] %}
+                {% if input['scriptSig']['hex'] %}
+                <tr>
+                    <th>Sigscript (HEX)</th>
+                    <td>{{ input['scriptSig']['hex'] }}</td>
+                </tr>
+                {% endif %}
+                {% if input['scriptSig']['asm'] %}
+                <tr>
+                    <th>Sigscript (ASM)</th>
+                    <td>{{ input['scriptSig']['asm'] }}</td>
+                </tr>
+                {% endif %}
+            {% endif %}
+            {% if input['txinwitness'] %}
+            <tr>
+                <th>Witness (ASM)</th>
+                <td>
+                    {% for line in input['txinwitness'] %}
+                        {{ line }}<br/>
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endif %}
+         <!--    <tr>
+                <th></th>
+                <td></td>
+            </tr>
+            <tr>
+                <th></th>
+                <td></td>
+            </tr>
+            <tr>
+                <th></th>
+                <td></td>
+            </tr>
+            <tr>
+                <th></th>
+                <td></td>
+            </tr> -->
+        {% endfor %}   
+    {% endif %} 
+    </tbody>
+</table>
+<h3>Outputs</h3>
+<table class="table">
+    
+    <tbody>
+    {% for output in data['vout'] %}
+        <tr>
+            <th class="table-primary">Index</th>
+            <td class="table-primary">{{ loop.index - 1}}</td>
+        </tr>
+        <tr>
+            <th>Value</th>
+            <td>{{ "%.8f"|format(output['value']) }} BTC</td>
+        </tr>
+        {% if output['scriptPubKey']['addresses'] %}        
+        <tr>
+            <th>Address</th>
+            <td>{{ output['scriptPubKey']['addresses'][0] }}</td>
+        </tr>
+        {% endif %}
+        <tr>
+            <th>Pkscript (HEX)</th>
+            <td>{{ output['scriptPubKey']['hex'] }}</td>
+        </tr>
+        <tr>
+            <th>Pkscript (ASM)</th>
+            <td>
+                {% for line in output['scriptPubKey']['asm'].split() %}
+                    {{ line }}<br/>
+                {% endfor %}
+            </td>
+        </tr>
+        <tr>
+            <th>Spent</th>
+            <td>{{ output['spent'] }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    
+</table>
+
+{% endblock %}

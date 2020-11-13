@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block main %}
+<h3>Details</h3>
+<table class="table">
+    <tbody>
+        <tr>
+            <td>Hash</td>
+            <td>{{ data['wtxid'] }}</td>
+        </tr>
+        <tr>
+            <td>Received Time</td>
+            <td>{{ data['time'] | ctime }}</td>
+        </tr>
+        <tr>
+            <td>Size</td>
+            <td>{{ data['vsize'] }} bytes</td>
+        </tr>
+        <tr>
+            <td>Weight</td>
+            <td>{{ data['weight'] }}</td>
+        </tr>
+    </tbody>
+</table>
+{{ data }}
+
+{% endblock %}

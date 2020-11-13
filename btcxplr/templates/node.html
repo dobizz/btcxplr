@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block main %}
+<div class="container">
+    <h3>Peer Nodes</h3>
+    <table class="table">
+        
+        <thead>
+            <tr>
+                <th scope="col">Node Id</th>
+                <th scope="col">Node Socket</th>
+                <th scope="col">User Agent</th>
+                <th scope="col">Ping</th>
+                <th scope="col">Sent</th>
+                <th scope="col">Received</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for peer in peers %}
+            <tr>
+                <th scope="row">{{ peer['id'] }}</th>
+                <td><a href="https://bitnodes.io/nodes/{{ peer['addr'].replace(':', '-') }}/">{{ peer['addr'] }}</a></td>
+                <td>{{ peer['subver'] }}</td>
+                <td>{{ "%d ms"|format(peer['pingtime'] * 1000) }}</td>
+                <td>{{ "%.2f MB"|format(peer['bytessent'] / 2**20) }}</td>
+                <td>{{ "%.2f MB"|format(peer['bytesrecv'] / 2**20) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        
+    </table>
+</div>
+{% endblock %}
