@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
 {% block main %}
-<h3>Summary</h3>
-<table class="table">
+<h3 class="shadow-sm p-3 mb-3 bg-white rounded">Summary</h3>
+<table class="table shadow-sm p-3 mb-5 bg-white rounded">
     <tbody>
         <tr>
             <th>Hash</th>
@@ -16,8 +16,8 @@
     </tbody>
 </table>
 
-<h3>Details</h3>
-<table class="table">
+<h3 class="shadow-sm p-3 mb-3 bg-white rounded">Details</h3>
+<table class="table shadow-sm p-3 mb-5 bg-white rounded">
     <tbody>
         <tr>
             <th>Hash</td>
@@ -72,9 +72,8 @@
     </tbody>
 </table>
 
-
-<h3>Inputs</h3>
-<table class="table">
+<h3 class="shadow-sm p-3 mb-3 bg-white rounded">Inputs</h3>
+<table class="table shadow-sm p-3 mb-5 bg-white rounded">
     <tbody>
     {% if 'coinbase' in data['vin'][0] %}
         <tr>
@@ -109,49 +108,32 @@
                 {% if input['scriptSig']['hex'] %}
                 <tr>
                     <th>Sigscript (HEX)</th>
-                    <td>{{ input['scriptSig']['hex'] }}</td>
+                    <td class="text-break">{{ input['scriptSig']['hex'] }}</td>
                 </tr>
                 {% endif %}
                 {% if input['scriptSig']['asm'] %}
                 <tr>
                     <th>Sigscript (ASM)</th>
-                    <td>{{ input['scriptSig']['asm'] }}</td>
+                    <td class="text-break">{{ input['scriptSig']['asm'] }}</td>
                 </tr>
                 {% endif %}
             {% endif %}
             {% if input['txinwitness'] %}
             <tr>
                 <th>Witness (ASM)</th>
-                <td>
+                <td class="text-break">
                     {% for line in input['txinwitness'] %}
                         {{ line }}<br/>
                     {% endfor %}
                 </td>
             </tr>
             {% endif %}
-         <!--    <tr>
-                <th></th>
-                <td></td>
-            </tr>
-            <tr>
-                <th></th>
-                <td></td>
-            </tr>
-            <tr>
-                <th></th>
-                <td></td>
-            </tr>
-            <tr>
-                <th></th>
-                <td></td>
-            </tr> -->
         {% endfor %}   
     {% endif %} 
     </tbody>
 </table>
-<h3>Outputs</h3>
-<table class="table">
-    
+<h3 class="shadow-sm p-3 mb-3 bg-white rounded">Outputs</h3>
+<table class="table shadow-sm p-3 mb-5 bg-white rounded">
     <tbody>
     {% for output in data['vout'] %}
         <tr>
@@ -170,11 +152,11 @@
         {% endif %}
         <tr>
             <th>Pkscript (HEX)</th>
-            <td>{{ output['scriptPubKey']['hex'] }}</td>
+            <td class="text-break">{{ output['scriptPubKey']['hex'] }}</td>
         </tr>
         <tr>
             <th>Pkscript (ASM)</th>
-            <td>
+            <td class="text-break">
                 {% for line in output['scriptPubKey']['asm'].split() %}
                     {{ line }}<br/>
                 {% endfor %}

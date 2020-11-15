@@ -1,9 +1,21 @@
 {% extends "base.html" %}
 
 {% block main %}
-    {{ data }}
-    <center>
+{{ data }}
+<center>
+    <div class="shadow-sm p-3 mb-5 bg-white rounded w-auto">
     <h2>Bitcoin Block Explorer</h2>
     <p>Using Flask and JSON-RPC</p>
+    </div>
+    <!-- <img src="/static/images/bitcoin_logo.svg" width="5%" length="50%"> -->
+    <script type="text/javascript" src="https://files.coinmarketcap.com/static/widget/currency.js"></script>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm"></div>
+            <div class="coinmarketcap-currency-widget" data-currencyid="1" data-base="USD" data-secondary="" data-ticker="true" data-rank="true" data-marketcap="true" data-volume="true" data-statsticker="true" data-stats="USD"></div>
+            <div class="col-sm"></div>
+        </div>
+    </div>
 </center>
+
 {% endblock %}

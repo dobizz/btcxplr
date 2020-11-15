@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 
 {% block main %}
-<h3>Memory Pool Transactions</h3>
-<table class="table">
+<h3 class="shadow-sm p-3 mb-3 bg-white rounded">Memory Pool Transactions</h3>
+<table class="table table-striped shadow-sm p-3 mb-5 bg-white rounded">
     <thead>
-        <th>#</th>
-        <th>Transaction Id</th>
+        <th scope="col">#</th>
+        <th scope="col">Transaction Id</th>
     </thead>
     <tbody>
     {% for txid in data %}
         <tr>
-            <td>{{ loop.index }}</td>
+            <th scope="row">{{ loop.index }}</th>
             <td><a href="/pool/{{ txid }}">{{ txid }}</a></td>
         </tr>
     {% endfor %}

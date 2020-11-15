@@ -4,7 +4,7 @@ This is where the routes are defined. It may be split into a package of its own 
 '''
 from btcxplr import app, rpc
 from btcxplr.api import RPC, RPC_USER, RPC_PASS, RPC_HOST, RPC_PORT, get_coindesk_price
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, flash
 from datetime import datetime
 
 
@@ -37,14 +37,26 @@ def get_stats():
 @app.route('/pool/<string:txid>')
 def list_mempool(txid):
     if txid:
-        data = rpc.getmempoolentry(txid)
-        if data:
-            return render_template(
-                'pooltx.html',
-                data=data
-            )
+        rtx = rpc.getrawtransaction(txid, verbose=True)
+        confirmed = True if 'confirmations' in rtx else False
+        # if block is mined
+        if confirmed:
+            flash('Transaction already in blockchain', 'primary')
+            return redirect(url_for('get_txn', txid=txid))
+            
+        # if still in mempool
         else:
-            return redirect(url_for('list_mempool'))
+            data = rpc.getmempoolentry(txid)
+            # if valid txid
+            if data:
+                return render_template(
+                    'pooltx.html',
+                    data=data, rtx=rtx
+                )
+            # flash warning and redirect if invalid txid
+            else:
+                flash('Invalid Transaction ID', 'warning')
+                return redirect(url_for('list_mempool'))
     else:
         pool = rpc.getrawmempool()
         return render_template(
@@ -54,21 +66,41 @@ def list_mempool(txid):
 
 @app.route('/blk/<int:blockid>', methods=['GET', 'POST'])
 def get_block(blockid):
+    blockchain_info = rpc.getblockchaininfo()
+
+    # flash waring and redirect if blockid is less than genesis block or more than current block height 
+    if blockid > blockchain_info['blocks'] or blockid < 0:
+        flash('Invalid Block Height', 'warning')
+        return redirect(url_for('get_stats'))
+
     block_hash = rpc.getblockhash(blockid)
     block_data = rpc.getblock(block_hash)#, verbosity=2)
-    block_data['miner'] = rpc.getrawtransaction(block_data['tx'][0], verbose=True)['vout'][0]['scriptPubKey']['addresses'][0]
-    block_stats = rpc.getblockstats(blockid)
+
+    try:
+        block_data['miner'] = rpc.getrawtransaction(block_data['tx'][0], verbose=True)['vout'][0]['scriptPubKey']['addresses'][0]
+    except:
+        block_data['miner'] = None
+
+    try:
+        block_stats = rpc.getblockstats(blockid)
+    except:
+        block_stats = {}
+
     return render_template(
         'block.html',
         data=block_data,
         stats=block_stats,
+        info=blockchain_info,
     )
 
 
 @app.route('/txn/<string:txid>', methods=['GET', 'POST'])
 def get_txn(txid):
     data = rpc.getrawtransaction(txid, verbose=True)
-    data['height'] = rpc.getblock(data['blockhash'])['height']
+    try:
+        data['height'] = rpc.getblock(data['blockhash'])['height']
+    except:
+        data['height'] = None
 
     for n, txin in enumerate(data['vin']):
         try:

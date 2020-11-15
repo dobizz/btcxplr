@@ -1,25 +1,48 @@
 {% extends "base.html" %}
 
 {% block main %}
-<div class="container">
-    <h3>Bitcoin Blockchain Stats</h3>
-    <table>
+<h3 class="shadow-sm p-3 mb-3 bg-white rounded">Bitcoin Blockchain Stats</h3>
+<table class="table shadow-sm p-3 mb-5 bg-white rounded">
+    <tbody>
+    <tr>
+        <td style="width: 20%">Block Height</td>
+        <td><a href="/blk/{{ data['blocks'] }}">{{ data['blocks'] }}</a></td>
+    </tr>
+    <tr>
+        <td class="">Network Difficulty</td>
+        <td class="">{{ data['difficulty'] }}</td>
+    </tr>
+    <tr>
+        <td class="">Network Hash Rate</td>
+        <td class="">{{ "%d EH/s"|format(data['networkhashps'] / 10**18) }}</td>
+    </tr>
+    <tr>
+        <td class="">Memory Pool Transactions</td>
+        <td class=""><a href='/pool'>{{ data['pooledtx'] }}</a></td>
+    </tr>
+    </tbody>
+</table>
+
+<h3 class="shadow-sm p-3 mb-3 bg-white rounded">Latest Blocks</h3>
+<table class="table shadow-sm p-3 mb-5 bg-white rounded">
+    <thead>
         <tr>
-            <td>Block Height</td>
-            <td><a href="/blk/{{ data['blocks'] }}">{{ data['blocks'] }}</a></td>
+            <th>Height</th>
+            <th>Mined</th>
+            <th>Miner</th>
+            <th>Size</th>
         </tr>
+    </thead>
+    <tbody>
+    {% set current_block = data['blocks'] %}
+    {% for block in range(current_block, current_block - 6, -1) %}
         <tr>
-            <td>Network Difficulty</td>
-            <td>{{ data['difficulty'] }}</td>
+            <td><a href="/blk/{{ block }}">{{ block }}</a></td>
+            <td>Date mined</td>
+            <td>Miner address</td>
+            <td>Size in bytes</td>
         </tr>
-        <tr>
-            <td>Network Hash Rate</td>
-            <td>{{ "%d EH/s"|format(data['networkhashps'] / 10**18) }}</td>
-        </tr>
-        <tr>
-            <td>Memory Pool Transactions</td>
-            <td><a href='/pool'>{{ data['pooledtx'] }}</a></td>
-        </tr>
-    </table>
-</div>
+    {% endfor %}
+    </tbody>
+</table>
 {% endblock %}

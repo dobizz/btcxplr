@@ -1,8 +1,44 @@
 {% extends "base.html" %}
 
 {% block main %}
-<h3>Block {{ data['height'] }}</h3>
-<table class="table">
+<h3 class="shadow-sm p-3 mb-3 bg-white rounded">
+{% if data['height'] == 0 %}
+    Genesis Block
+{% else %}
+    Block {{ data['height'] }}
+{% endif %}
+</h3>
+{% if data['height'] == 0 %}
+    <div class="shadow-sm p-3 mb-5 bg-white rounded">
+    <center>
+        <h3><a href="https://bitcoin.org/bitcoin.pdf">Bitcoin: A Peer-to-Peer Electronic Cash System</a></h3>
+        Satoshi Nakamoto<br>
+        satoshin@gmx.com<br>
+        www.bitcoin.org<br><br>
+        </center>
+            <p class="text-justify"><b>Abstract.</b> A purely peer-to-peer version of electronic cash would allow online
+    payments to be sent directly from one party to another without going through a
+    financial institution. Digital signatures provide part of the solution, but the main
+    benefits are lost if a trusted third party is still required to prevent double-spending.
+    We propose a solution to the double-spending problem using a peer-to-peer network.
+    The network timestamps transactions by hashing them into an ongoing chain of
+    hash-based proof-of-work, forming a record that cannot be changed without redoing
+    the proof-of-work. The longest chain not only serves as proof of the sequence of
+    events witnessed, but proof that it came from the largest pool of CPU power. As
+    long as a majority of CPU power is controlled by nodes that are not cooperating to
+    attack the network, they'll generate the longest chain and outpace attackers. The
+    network itself requires minimal structure. Messages are broadcast on a best effort
+    basis, and nodes can leave and rejoin the network at will, accepting the longest
+    proof-of-work chain as proof of what happened while they were gone.</p>
+    
+    <br/>
+    </div>
+{% endif %}
+<div class="progress">
+    <div class="progress-bar progress-bar-striped progress-bar-animated" style="width:{{ data['height'] / info['blocks'] * 100}}%">Block {{ data['height'] }} of {{ info['blocks'] }}
+    </div>
+</div>
+<table class="table shadow-sm p-3 mb-5 bg-white rounded">
     <tbody>
         <tr>
             <th>Hash</td>
@@ -56,6 +92,7 @@
             <th>Nonce</td>
             <td>{{ data['nonce'] }}</td>
         </tr>
+        {% if stats %}
         <tr>
             <th>Transaction Volume</td>
             <td>{{ stats['total_out'] / 10**8 }} BTC</td>
@@ -68,11 +105,44 @@
             <th>Fee Reward</td>
             <td>{{ stats['totalfee'] / 10**8 }} BTC</td>
         </tr>
+        {% else %}
+        <tr>
+            <th>Transaction Volume</td>
+            <td>0.0 BTC</td>
+        </tr>
+        <tr>
+            <th>Block Reward</td>
+            <td>50.0 BTC</td>
+        </tr>
+        <tr>
+            <th>Fee Reward</td>
+            <td>0.0 BTC</td>
+        </tr>
+        {% endif %}
+        <!-- Hides row for genesis block -->
+        {% if data['height'] >= 1 %}
+        <tr>
+            <th>Previous Block</th>
+            <td><a href="/blk/{{ data['height'] - 1 }}">
+            {% if data['height'] == 1 %}
+                Genesis Block
+            {% else %}
+                {{ data['height'] - 1 }}
+            {% endif %}</a></td>
+        </tr>
+        {% endif %}
+        <!-- Hides row for last block -->
+        {% if data['height'] + 1 <= info['blocks'] %}
+        <tr>
+            <th>Next Block</th>
+            <td><a href="/blk/{{ data['height'] + 1 }}">{{ data['height'] + 1 }}</a></td>
+        </tr>
+        {% endif %}
     </tbody>
 </table>
 
-<h4>Block Transactions</h4>
-<table class="table">
+<h4 class="shadow-sm p-3 mb-3 bg-white rounded">Block Transactions</h4>
+<table class="table shadow-sm p-3 mb-5 bg-white rounded">
     <tbody>
     {% for tx in data['tx'] %}
         <tr>
