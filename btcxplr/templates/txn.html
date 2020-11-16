@@ -82,7 +82,7 @@
         </tr>
         <tr>
             <th>Coinbase</th>
-            <td>{{data['vin'][0]['coinbase'] }}</td>
+            <td class="text-break">{{data['vin'][0]['coinbase'] }}</td>
         </tr>
     {% else %}
         {% for input in data['vin'] %}
@@ -102,7 +102,7 @@
             {% endif %}
             <tr>
                 <th>Value</th>
-                <td>{{ input['value'] }}</td>
+                <td>{{ "%0.8f BTC" | format(input['value']) }}</td>
             </tr>
             {% if input['scriptSig'] %}
                 {% if input['scriptSig']['hex'] %}

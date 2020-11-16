@@ -93,32 +93,26 @@
             <td>{{ data['nonce'] }}</td>
         </tr>
         {% if stats %}
-        <tr>
-            <th>Transaction Volume</td>
-            <td>{{ stats['total_out'] / 10**8 }} BTC</td>
-        </tr>
-        <tr>
-            <th>Block Reward</td>
-            <td>{{ stats['subsidy'] / 10**8 }} BTC</td>
-        </tr>
-        <tr>
-            <th>Fee Reward</td>
-            <td>{{ stats['totalfee'] / 10**8 }} BTC</td>
-        </tr>
+            {% set txn_volume = stats['total_out'] / 10**8 %}
+            {% set block_reward = stats['subsidy'] / 10**8 %}
+            {% set fee_reward = stats['totalfee'] / 10**8 %}
         {% else %}
+            {% set txn_volume = 0 %}
+            {% set block_reward = 50 %}
+            {% set fee_reward = 0 %}
+        {% endif %}
         <tr>
             <th>Transaction Volume</td>
-            <td>0.0 BTC</td>
+            <td>{{ "%0.8f BTC" | format(txn_volume) }}</td>
         </tr>
         <tr>
             <th>Block Reward</td>
-            <td>50.0 BTC</td>
+            <td>{{ "%0.8f BTC" | format(block_reward) }}</td>
         </tr>
         <tr>
             <th>Fee Reward</td>
-            <td>0.0 BTC</td>
+            <td>{{ "%0.8f BTC" | format(fee_reward) }}</td>
         </tr>
-        {% endif %}
         <!-- Hides row for genesis block -->
         {% if data['height'] >= 1 %}
         <tr>
